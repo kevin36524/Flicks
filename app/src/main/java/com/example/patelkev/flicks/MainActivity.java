@@ -1,9 +1,11 @@
 package com.example.patelkev.flicks;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.example.patelkev.flicks.Adapters.MoviesRecyclerAdapter;
 import com.example.patelkev.flicks.Models.Movie;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MoviesRecyclerAdapter.MovieInterface {
 
     ArrayList <Movie> movies;
     MoviesRecyclerAdapter moviesArrayAdapter;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         lvMovies = (RecyclerView) findViewById(R.id.lvMovies);
         lvMovies.setLayoutManager(new LinearLayoutManager(this));
         movies = new ArrayList<Movie>();
-        moviesArrayAdapter = new MoviesRecyclerAdapter(this, movies);
+        moviesArrayAdapter = new MoviesRecyclerAdapter(this, movies, this);
         lvMovies.setAdapter(moviesArrayAdapter);
     }
 
@@ -64,5 +66,14 @@ public class MainActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
+    }
+
+    @Override
+    public void tappedMovieItem(Movie movie, int position) {
+        Log.d("Debug", String.format("Need to show detial for %s", movie.getTitle()));
+        Intent intent = new Intent(MainActivity.this,MovieDetailActivity.class);
+        intent.putExtra("movie", movie);
+        intent.putExtra("position", position);
+        startActivity(intent);
     }
 }

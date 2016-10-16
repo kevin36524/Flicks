@@ -23,12 +23,18 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     Context mcontext;
     ArrayList<Movie> movies;
+    MovieInterface tapDelegate;
 
     private final int PORTRAIT = 0, LANDSCAPE = 1, FILL = 2;
 
-    public MoviesRecyclerAdapter(Context context, ArrayList<Movie> movies) {
+    public MoviesRecyclerAdapter(Context context, ArrayList<Movie> movies, MovieInterface tapDelegate) {
         this.mcontext = context;
         this.movies = movies;
+        this.tapDelegate = tapDelegate;
+    }
+
+    public static interface MovieInterface {
+        public void tappedMovieItem(Movie movie, int position);
     }
 
     @Override
@@ -54,11 +60,11 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         View movieCell = inflater.inflate(R.layout.movie_cell, parent, false);
         RecyclerView.ViewHolder viewHolder;
         if (viewType == PORTRAIT) {
-            viewHolder = new ViewHolder(movieCell);
+            viewHolder = new ViewHolder(movieCell, this);
         } else if (viewType == FILL) {
-            viewHolder = new ViewHolderFill(movieCell);
-        }else {
-            viewHolder = new ViewHolderLand(movieCell);
+            viewHolder = new ViewHolderFill(movieCell, this);
+        } else {
+            viewHolder = new ViewHolderLand(movieCell, this);
         }
 
         return viewHolder;
@@ -96,39 +102,64 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return movies.size();
     }
 
-    public static class  ViewHolder extends  RecyclerView.ViewHolder {
+    public static class  ViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView ivMovieImage;
         TextView tvMovieTitle;
         TextView tvMovieOverview;
+        MoviesRecyclerAdapter adapter;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, MoviesRecyclerAdapter adapter) {
             super(itemView);
 
+            this.adapter = adapter;
+            itemView.setOnClickListener(this);
             ivMovieImage = (ImageView) itemView.findViewById(R.id.ivMovieImage);
             tvMovieTitle = (TextView) itemView.findViewById(R.id.tvMovieTitle);
             tvMovieOverview = (TextView) itemView.findViewById(R.id.tvMovieOverview);
         }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            Movie movie = this.adapter.movies.get(position);
+
+            this.adapter.tapDelegate.tappedMovieItem(movie,position);
+        }
     }
 
-    public static class  ViewHolderLand extends  RecyclerView.ViewHolder {
+    public static class  ViewHolderLand extends  RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView ivMovieImage;
         TextView tvMovieTitle;
         TextView tvMovieOverview;
+        MoviesRecyclerAdapter adapter;
 
-        public ViewHolderLand(View itemView) {
+        public ViewHolderLand(View itemView, MoviesRecyclerAdapter adapter) {
             super(itemView);
 
+            this.adapter = adapter;
+            itemView.setOnClickListener(this);
             ivMovieImage = (ImageView) itemView.findViewById(R.id.ivMovieImage);
             tvMovieTitle = (TextView) itemView.findViewById(R.id.tvMovieTitle);
             tvMovieOverview = (TextView) itemView.findViewById(R.id.tvMovieOverview);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            Movie movie = this.adapter.movies.get(position);
+
+            this.adapter.tapDelegate.tappedMovieItem(movie, position);
         }
     }
 
     public static class ViewHolderFill extends RecyclerView.ViewHolder {
         ImageView ivMovieImage;
+        MoviesRecyclerAdapter adapter;
 
-        public ViewHolderFill(View itemView) {
+        public ViewHolderFill(View itemView, MoviesRecyclerAdapter adapter) {
             super(itemView);
+
+            this.adapter = adapter;
             this.ivMovieImage = (ImageView) itemView.findViewById(R.id.ivMovieImage);
         }
     }
