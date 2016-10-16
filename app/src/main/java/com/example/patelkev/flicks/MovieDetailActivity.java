@@ -1,8 +1,10 @@
 package com.example.patelkev.flicks;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +30,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         tvTitleView = (TextView) findViewById(R.id.tvTitleView);
         tvOverview = (TextView) findViewById(R.id.tvOverview);
 
-        Picasso.with(this).load(this.movie.getBackdrop_path()).into(ivMoviePosterImage);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        Picasso.with(this).load(this.movie.getBackdrop_path()).resize(width, 0).into(ivMoviePosterImage);
         tvTitleView.setText(this.movie.getTitle());
         tvOverview.setText(this.movie.getOverview());
     }

@@ -62,7 +62,7 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (viewType == PORTRAIT) {
             viewHolder = new ViewHolder(movieCell, this);
         } else if (viewType == FILL) {
-            viewHolder = new ViewHolderFill(movieCell, this);
+            viewHolder = new ViewHolderFill(movieCell, this, parent);
         } else {
             viewHolder = new ViewHolderLand(movieCell, this);
         }
@@ -86,7 +86,7 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         } else if (viewType == FILL) {
             ViewHolderFill vh = (ViewHolderFill) holder;
             vh.ivMovieImage.setImageResource(0);
-            Picasso.with(this.mcontext).load(movie.getBackdrop_path()).into(vh.ivMovieImage);
+            Picasso.with(this.mcontext).load(movie.getBackdrop_path()).resize(vh.parentWidth,0).into(vh.ivMovieImage);
         }else {
             ViewHolderLand vh = (ViewHolderLand) holder;
 
@@ -155,9 +155,12 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public static class ViewHolderFill extends RecyclerView.ViewHolder {
         ImageView ivMovieImage;
         MoviesRecyclerAdapter adapter;
+        int parentWidth;
 
-        public ViewHolderFill(View itemView, MoviesRecyclerAdapter adapter) {
+        public ViewHolderFill(View itemView, MoviesRecyclerAdapter adapter, ViewGroup parent) {
             super(itemView);
+
+            this.parentWidth = parent.getWidth();
 
             this.adapter = adapter;
             this.ivMovieImage = (ImageView) itemView.findViewById(R.id.ivMovieImage);
