@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,5 +45,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         Picasso.with(this).load(this.movie.getBackdrop_path()).resize(width, 0).transform(new RoundedCornersTransformation(30,30)).into(ivMoviePosterImage);
         tvTitleView.setText(this.movie.getTitle());
         tvOverview.setText(this.movie.getOverview());
+    }
+
+    public void playTrailer(View v) {
+        Log.d("Debug", "I will be playing the trailer");
     }
 }
