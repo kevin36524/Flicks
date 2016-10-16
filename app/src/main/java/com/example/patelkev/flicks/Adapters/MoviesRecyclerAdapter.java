@@ -15,6 +15,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 /**
  * Created by patelkev on 10/15/16.
  */
@@ -82,18 +84,18 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             vh.tvMovieOverview.setText(movie.getOverview());
             vh.tvMovieTitle.setText(movie.getTitle());
             vh.ivMovieImage.setImageResource(0);
-            Picasso.with(this.mcontext).load(movie.getPoster_path()).into(vh.ivMovieImage);
+            Picasso.with(this.mcontext).load(movie.getPoster_path()).transform(new RoundedCornersTransformation(30,30)).into(vh.ivMovieImage);
         } else if (viewType == FILL) {
             ViewHolderFill vh = (ViewHolderFill) holder;
             vh.ivMovieImage.setImageResource(0);
-            Picasso.with(this.mcontext).load(movie.getBackdrop_path()).resize(vh.parentWidth,0).into(vh.ivMovieImage);
+            Picasso.with(this.mcontext).load(movie.getBackdrop_path()).resize(vh.parentWidth,0).transform(new RoundedCornersTransformation(30,30)).into(vh.ivMovieImage);
         }else {
             ViewHolderLand vh = (ViewHolderLand) holder;
 
             vh.tvMovieOverview.setText(movie.getOverview());
             vh.tvMovieTitle.setText(movie.getTitle());
             vh.ivMovieImage.setImageResource(0);
-            Picasso.with(this.mcontext).load(movie.getBackdrop_path()).into(vh.ivMovieImage);
+            Picasso.with(this.mcontext).load(movie.getBackdrop_path()).transform(new RoundedCornersTransformation(30, 30)).into(vh.ivMovieImage);
         }
     }
 

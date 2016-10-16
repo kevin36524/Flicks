@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.example.patelkev.flicks.Models.Movie;
 import com.squareup.picasso.Picasso;
 
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 public class MovieDetailActivity extends AppCompatActivity {
 
     ImageView ivMoviePosterImage;
@@ -35,7 +37,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         display.getSize(size);
         int width = size.x;
 
-        Picasso.with(this).load(this.movie.getBackdrop_path()).resize(width, 0).into(ivMoviePosterImage);
+        final int radius = 5;
+        final int margin = 5;
+
+        Picasso.with(this).load(this.movie.getBackdrop_path()).resize(width, 0).transform(new RoundedCornersTransformation(30,30)).into(ivMoviePosterImage);
         tvTitleView.setText(this.movie.getTitle());
         tvOverview.setText(this.movie.getOverview());
     }
