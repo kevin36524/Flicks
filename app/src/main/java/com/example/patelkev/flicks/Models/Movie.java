@@ -13,6 +13,9 @@ import java.util.ArrayList;
 public class Movie {
     String poster_path;
     String title;
+    String backdrop_path;
+    String overview;
+    Double vote_average;
 
     public String getOverview() {
         return overview;
@@ -22,16 +25,25 @@ public class Movie {
         return  String.format("https://image.tmdb.org/t/p/w500/%s", poster_path);
     }
 
+    public Double getVote_average() {
+        return vote_average;
+    }
+
+    public String getBackdrop_path() {
+        return String.format("https://image.tmdb.org/t/p/w500/%s", backdrop_path);
+    }
+
     public String getTitle() {
         return title;
     }
 
-    String overview;
 
     public Movie(JSONObject jsonMovieData) throws JSONException {
         this.poster_path = jsonMovieData.getString("poster_path");
         this.title = jsonMovieData.getString("title");
         this.overview = jsonMovieData.getString("overview");
+        this.backdrop_path = jsonMovieData.getString("backdrop_path");
+        this.vote_average = jsonMovieData.getDouble("vote_average");
     }
 
     public static ArrayList<Movie> fromJSONArray(JSONArray jsonArray) {
