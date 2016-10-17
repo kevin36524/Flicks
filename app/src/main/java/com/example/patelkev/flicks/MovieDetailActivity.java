@@ -3,24 +3,35 @@ package com.example.patelkev.flicks;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.patelkev.flicks.Models.Movie;
-import com.squareup.picasso.Picasso;
+import com.example.patelkev.flicks.Models.Trailer;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class MovieDetailActivity extends AppCompatActivity {
+import java.util.ArrayList;
 
-    ImageView ivMoviePosterImage;
+import cz.msebera.android.httpclient.Header;
+
+public class MovieDetailActivity extends YouTubeBaseActivity {
+
+    YouTubePlayerView youTubePlayerView;
     TextView tvTitleView;
     TextView tvOverview;
     Movie movie;
+
+    public static final String YT_API_KEY = "AIzaSyCZ2Vsu6rtYjeCa3k_gHQdPfqjw-qs4INY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +41,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.movie = (Movie) intent.getSerializableExtra("movie");
 
-        ivMoviePosterImage = (ImageView) findViewById(R.id.ivPosterImage);
+        youTubePlayerView = (YouTubePlayerView) findViewById(R.id.player);
         tvTitleView = (TextView) findViewById(R.id.tvTitleView);
         tvOverview = (TextView) findViewById(R.id.tvOverview);
 
@@ -42,12 +53,54 @@ public class MovieDetailActivity extends AppCompatActivity {
         final int radius = 5;
         final int margin = 5;
 
-        Picasso.with(this).load(this.movie.getBackdrop_path()).resize(width, 0).transform(new RoundedCornersTransformation(30,30)).into(ivMoviePosterImage);
         tvTitleView.setText(this.movie.getTitle());
         tvOverview.setText(this.movie.getOverview());
+
+        this.fetchTrailerID();
     }
 
-    public void playTrailer(View v) {
-        Log.d("Debug", "I will be playing the trailer");
+    private void fetchTrailerID() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(movie.getTrailerPath(), new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    JSONArray results = response.getJSONArray("results");
+                    ArrayList<Trailer> trailers = Trailer.TrailersFromArray(results);
+                    fetchAndPopulateTrailer(trailers.get(0).getKey());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                super.onSuccess(statusCode, headers, response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
+
+    private void fetchAndPopulateTrailer(final String videoId) {
+
+        youTubePlayerView.initialize(YT_API_KEY,
+                new YouTubePlayer.OnInitializedListener() {
+                    @Override
+                    public void onInitializationSuccess(YouTubePlayer.Provider provider,
+                                                        YouTubePlayer youTubePlayer, boolean b) {
+
+                        // do any work here to cue video, play video, etc.
+                        youTubePlayer.cueVideo(videoId);
+                        // or to play immediately
+                        //youTubePlayer.loadVideo("q-RBA0xoaWU");
+                    }
+
+                    @Override
+                    public void onInitializationFailure(YouTubePlayer.Provider provider,
+                                                        YouTubeInitializationResult youTubeInitializationResult) {
+                        Toast.makeText(MovieDetailActivity.this, "Youtube Failed!", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

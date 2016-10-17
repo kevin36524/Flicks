@@ -8,40 +8,18 @@
     android:background="@color/colorBlack"
     tools:context="com.example.patelkev.flicks.MovieDetailActivity">
 
-    <FrameLayout
+    <com.google.android.youtube.player.YouTubePlayerView
+        android:id="@+id/player"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/framelayout">
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/ivPosterImage" />
+        android:layout_height="wrap_content">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:onClick="playTrailer"
-        android:background="@color/colorTransparent"
-        />
-
-    <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:scaleType="centerInside"
-        android:layout_gravity="center"
-        android:onClick="playTrailer"
-        android:background="@drawable/ic_play_circle_outline_white_24px"/>
-    </FrameLayout>
+    </com.google.android.youtube.player.YouTubePlayerView>
 
     <TextView
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/framelayout"
+        android:layout_below="@+id/player"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textColor="@color/colorTextWhite"

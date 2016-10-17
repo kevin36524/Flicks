@@ -16,10 +16,19 @@ public class Movie implements Serializable {
     String title;
     String backdrop_path;
     String overview;
+    String id;
     Double vote_average;
 
     public String getOverview() {
         return overview;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getTrailerPath() {
+        return  String.format("https://api.themoviedb.org/3/movie/%s/videos?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed", id);
     }
 
     public String getPoster_path() {
@@ -45,6 +54,7 @@ public class Movie implements Serializable {
         this.overview = jsonMovieData.getString("overview");
         this.backdrop_path = jsonMovieData.getString("backdrop_path");
         this.vote_average = jsonMovieData.getDouble("vote_average");
+        this.id = jsonMovieData.getString("id");
     }
 
     public static ArrayList<Movie> fromJSONArray(JSONArray jsonArray) {
