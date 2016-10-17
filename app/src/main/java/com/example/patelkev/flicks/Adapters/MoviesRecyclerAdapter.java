@@ -37,6 +37,7 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public static interface MovieInterface {
         public void tappedMovieItem(Movie movie, int position);
+        public void showMovieTrailer(Movie movie);
     }
 
     @Override
@@ -59,13 +60,16 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View movieCell = inflater.inflate(R.layout.movie_cell, parent, false);
+        View movieCell;
         RecyclerView.ViewHolder viewHolder;
         if (viewType == PORTRAIT) {
+            movieCell = inflater.inflate(R.layout.movie_cell, parent, false);
             viewHolder = new ViewHolder(movieCell, this);
         } else if (viewType == FILL) {
+            movieCell = inflater.inflate(R.layout.movie_cell_full, parent, false);
             viewHolder = new ViewHolderFill(movieCell, this, parent);
         } else {
+            movieCell = inflater.inflate(R.layout.movie_cell, parent, false);
             viewHolder = new ViewHolderLand(movieCell, this);
         }
 
@@ -89,7 +93,7 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ViewHolderFill vh = (ViewHolderFill) holder;
             vh.ivMovieImage.setImageResource(0);
             Picasso.with(this.mcontext).load(movie.getBackdrop_path()).resize(vh.parentWidth,0).transform(new RoundedCornersTransformation(30,30)).into(vh.ivMovieImage);
-        }else {
+        } else {
             ViewHolderLand vh = (ViewHolderLand) holder;
 
             vh.tvMovieOverview.setText(movie.getOverview());
@@ -154,18 +158,28 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    public static class ViewHolderFill extends RecyclerView.ViewHolder {
+    public static class ViewHolderFill extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView ivMovieImage;
+        ImageView ivPlayImage;
         MoviesRecyclerAdapter adapter;
         int parentWidth;
 
         public ViewHolderFill(View itemView, MoviesRecyclerAdapter adapter, ViewGroup parent) {
             super(itemView);
 
+            itemView.setOnClickListener(this);
             this.parentWidth = parent.getWidth();
-
             this.adapter = adapter;
+            this.ivPlayImage = (ImageView) itemView.findViewById(R.id.ivPlayImage);
             this.ivMovieImage = (ImageView) itemView.findViewById(R.id.ivMovieImage);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            Movie movie = this.adapter.movies.get(position);
+
+            this.adapter.tapDelegate.showMovieTrailer(movie);
         }
     }
 }

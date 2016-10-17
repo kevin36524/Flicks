@@ -18,7 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MovieDetailActivity" />
-        <activity android:name=".YoutubePlayerActivity"></activity>
+        <activity android:name=".YoutubePlayerActivity"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

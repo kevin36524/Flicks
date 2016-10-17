@@ -76,4 +76,11 @@ public class MainActivity extends AppCompatActivity implements MoviesRecyclerAda
         intent.putExtra("position", position);
         startActivity(intent);
     }
+
+    @Override
+    public void showMovieTrailer(Movie movie) {
+        Intent intent = new Intent(MainActivity.this, YoutubePlayerActivity.class);
+        intent.putExtra("movie", movie);
+        startActivity(intent);
+    }
 }
